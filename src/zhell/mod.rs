@@ -51,10 +51,15 @@ impl Zhell {
 		io::stdout().flush().ok().expect("Error flushing!");
 	}
 
-	pub fn exec_cmd(&self, cmd: &String) {
+	pub fn cmd_match(cmd: &str, name: &str) -> bool {
+		cmd.starts_with(&*format!("{} ", name)) 
+			|| cmd == name
+	}
+
+	pub fn exec_cmd(&self, cmd: &str) {
 		for (name, toolz) in &VEC_TOOLZ as &VecToolz {
-			if name.len() <= cmd.len() && name == &cmd[0..name.len()] {
-				toolz.exec_cmd(String::from(&cmd[name.len()..cmd.len()]));
+			if Zhell::cmd_match(cmd, name) {
+				toolz.exec_cmd(&cmd[name.len()..cmd.len()].trim());
 				return;
 			}
 		}
@@ -62,7 +67,7 @@ impl Zhell {
 	}
 	
 
-	pub fn bash(&self, cmd: &String) {
+	pub fn bash(&self, cmd: &str) {
 	  	let mut c = std::process::Command::new("bash");
 	  	c.args(&["-c", cmd]);
 		let mut child = c.spawn().expect("Could not run the command");
@@ -71,6 +76,8 @@ impl Zhell {
 		unsafe { child_pid  = 0; }
 	}
 }
+
+//static 
 
 /// builtins
 impl Zhell {

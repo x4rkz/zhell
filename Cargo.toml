@@ -7,3 +7,4 @@ authors = ["x4rkz"]
 libc = "*"
 ansi_term = "*"
 lazy_static = "*"
+#reg = "*"

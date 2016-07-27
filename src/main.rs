@@ -35,6 +35,5 @@ fn main() {
 	unsafe{ signal(SIGINT, get_handler()); }
 
 	let zhell = Zhell::new();
-	//let a = VEC_TOOLZ["local_netz"];
-	 zhell.run();
+	zhell.run();
 }
