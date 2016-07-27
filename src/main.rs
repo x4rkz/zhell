@@ -1,26 +1,40 @@
-fn main() {
-	use std::io;
-  	use std::io::Write;
+/// TO DO: TAB, builtins
+/// example toolz, install toollz
 
-	loop {	
-		let mut cmd = String::new();
-		print!("zhell> ");
-		io::stdout().flush().ok().expect("ERROR FLUSHING!");
-		match io::stdin().read_line(&mut cmd) {
-		    Ok(0) => break,
-		    Ok(_) => {cmd.pop(); exec_cmd(cmd)}
-		    Err(error) => println!("error: {}", error),
+#[macro_use]
+extern crate lazy_static;
+
+
+extern crate ansi_term;
+
+use zhell::*;
+pub mod zhell;
+
+
+/// <<Signal handling
+extern crate libc;
+use libc::sighandler_t;
+use libc::{c_int, c_void, SIGINT};
+use libc::signal;
+
+extern fn handler(_: c_int) {
+	unsafe {
+		if child_pid > 0 {
+			std::process::Command::new("kill").arg(child_pid.to_string()).spawn().expect("lol");
 		}
 	}
 }
 
-fn exec_cmd(cmd: String) {
-	use std::process::Command;
+fn get_handler() -> sighandler_t {
+    handler as extern fn(c_int) as *mut c_void as sighandler_t
+}
+/// Signal handling>>
 
-	println!("a{}a", cmd);
-	let output = Command::new(cmd).output()
-								  .expect("Failed to execute process")
-								  .stdout;
-	let output = "Lolilol";
-	println!("{}", output);
+
+fn main() {
+	unsafe{ signal(SIGINT, get_handler()); }
+
+	let zhell = Zhell::new();
+	//let a = VEC_TOOLZ["local_netz"];
+	 zhell.run();
 }

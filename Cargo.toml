@@ -3,4 +3,7 @@ name = "zhell"
 version = "0.0.1"
 authors = ["x4rkz"]
 
-#[dependencies]
+[dependencies]
+libc = "*"
+ansi_term = "*"
+lazy_static = "*"
